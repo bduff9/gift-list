@@ -1,0 +1,17 @@
+{
+  "public": {},
+  "private": {
+    "oAuth": {
+      "facebook": {
+        "appId": "",
+        "secret": ""
+      },
+      "google": {
+        "clientId": "",
+        "secret": ""
+      }
+    },
+    "gmail": "smtp://bduff9%40gmail.com:uylgjwmmtrmamhab@smtp.gmail.com:465"
+  },
+  "mode": "development"
+}

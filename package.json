@@ -1,0 +1,32 @@
+{
+  "name": "gift-list",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bduff9/gift-list.git"
+  },
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "meteor --settings settings.json",
+    "debug": "meteor debug --settings settings.json"
+  },
+  "dependencies": {
+    "autoprefixer": "^6.3.7",
+    "bcrypt": "^0.8.7",
+    "meteor-node-stubs": "~0.2.0"
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {
+        "browsers": [
+          "last 2 versions",
+          "ie >= 9",
+          "and_chr >= 2.3"
+        ]
+      }
+    }
+  },
+  "devDependencies": {
+    "vue": "^1.0.24",
+    "vue-router": "^0.7.13"
+  }
+}
