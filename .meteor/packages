@@ -29,7 +29,6 @@ fortawesome:fontawesome
 themeteorchef:bert
 splendido:accounts-meld
 aldeed:simple-schema
-aldeed:collection2
 mdg:validated-method
 http
 session
@@ -40,3 +39,4 @@ akryum:vue
 akryum:vue-component
 akryum:vue-router
 akryum:vue-jade
+jagi:astronomy
