@@ -10,10 +10,13 @@
     "debug": "meteor debug --settings settings.json"
   },
   "dependencies": {
-    "autoprefixer": "^6.3.7",
+    "autoprefixer": "^6.5.0",
     "bcrypt": "^0.8.7",
-    "meteor-node-stubs": "~0.2.0"
+    "meteor-node-stubs": "~0.2.0",
+    "vue": "^2.0.1",
+    "vue-router": "^2.0.0-rc.5"
   },
+  "devDependencies": {},
   "postcss": {
     "plugins": {
       "autoprefixer": {
@@ -24,9 +27,5 @@
         ]
       }
     }
-  },
-  "devDependencies": {
-    "vue": "^1.0.24",
-    "vue-router": "^0.7.13"
   }
 }

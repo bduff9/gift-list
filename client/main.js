@@ -3,14 +3,20 @@
 
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
+import Vue from 'vue';
+import router from '/imports/routes';
 
-import '/imports/ui/pages/main.html';
-import '/imports/startup/client';
+// App layout
+import AppLayout from '/imports/ui/AppLayout.vue';
 
-import { writeLog } from '../imports/api/collections/logs';
-import { displayError } from '../imports/api/global';
-
+// App start
 Meteor.startup(() => {
+
+  // Start the router
+  new Vue({
+    router: router.start(),
+    render: h => h(AppLayout),
+  }).$mount('app');
 
   Accounts.onLogin(() => {
     const user = Meteor.user();
