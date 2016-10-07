@@ -1,8 +1,11 @@
 <template>
 <div class="app-menu">
   <router-link :to="{ name: 'home' }" exact>Home</router-link>
-  <router-link :to="{ name: 'my-list' }" exact>My List</router-link>
-  <router-link to="my-list2">Bad Link</router-link>
+  <router-link :to="{ name: 'my-list' }">My Gift List</router-link>
+  <router-link :to="{ name: 'other-lists' }">View Others' Lists</router-link>
+  <router-link :to="{ name: 'shopping-list' }">My Shopping List</router-link>
+  <router-link :to="{ name: 'settings' }">Settings</router-link>
+  <router-link to="/logout">Sign Out</router-link>
 </div>
 </template>
 

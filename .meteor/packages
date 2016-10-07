@@ -26,10 +26,12 @@ akryum:vue-sass
 aldeed:simple-schema
 email@1.1.17_1
 fortawesome:fontawesome
+fourseven:scss
 http@1.2.9_1
 jagi:astronomy
 juliancwirko:postcss
 mdg:validated-method
+meteorhacks:fast-render
 mizzao:user-status
 momentjs:moment
 pagebakers:ionicons
