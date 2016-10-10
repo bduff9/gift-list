@@ -1,5 +1,5 @@
-@import "../utilities/controls.sass";
-@import "../utilities/variables.sass";
+@import "../utilities/controls";
+@import "../utilities/variables";
 
 @mixin button-small {
   border-radius: $radius-small;

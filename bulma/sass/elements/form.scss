@@ -1,5 +1,5 @@
-@import "../utilities/controls.sass";
-@import "../utilities/mixins.sass";
+@import "../utilities/controls";
+@import "../utilities/mixins";
 
 @mixin form-control {
   @include control;

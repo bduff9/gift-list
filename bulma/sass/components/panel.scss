@@ -1,5 +1,5 @@
-@import "../utilities/mixins.sass";
-@import "../utilities/variables.sass";
+@import "../utilities/mixins";
+@import "../utilities/variables";
 
 .panel-icon {
   @include fa(14px, 16px);

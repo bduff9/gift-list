@@ -1,5 +1,5 @@
-@import "./animations.sass";
-@import "./variables.sass";
+@import "./animations";
+@import "./variables";
 
 @mixin arrow($color) {
   border: 1px solid $color;
