@@ -23,4 +23,6 @@ Meteor.startup(() => {
 
     return true;
   });
+
+  //TODO put fast render routes here
 });

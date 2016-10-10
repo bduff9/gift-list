@@ -4,10 +4,10 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import Vue from 'vue';
-import router from '/imports/routes';
+import router from '../imports/api/routes';
 
 // App layout
-import AppLayout from '/imports/ui/AppLayout.vue';
+import AppLayout from '../imports/ui/AppLayout.vue';
 
 // App start
 Meteor.startup(() => {

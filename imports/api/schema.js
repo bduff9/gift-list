@@ -115,3 +115,121 @@ export const Holiday = Class.create({
   methods: {},
   indexes: {}
 });
+
+export const Families = new Mongo.collection('families');
+export const Family = Class.create({
+  name: 'Family',
+  collection: Families,
+  secured: true,
+  fields: {
+    name: {
+      type: String
+    },
+    location: {
+      type: String
+    },
+    active: {
+      type: Boolean
+    }
+  },
+  methods: {},
+  indexes: {}
+});
+
+export const Gifts = new Mongo.collection('gifts');
+export const Gift = Class.create({
+  name: 'Gift',
+  collection: Gifts,
+  secured: true,
+  fields: {
+    name: {
+      type: String,
+      validators: [{ type: 'minLength', param: 3 }]
+    },
+    descr: {
+      type: String,
+      default: ''
+    },
+    price: {
+      type: Number,
+      default: 0
+    },
+    location: {
+      type: String
+    },
+    link: {
+      type: String
+    },
+    picture: {
+      type: String
+    },
+    notes: {
+      type: String
+    },
+    for_id: {
+      type: String
+    },
+    priority: {
+      type: Number,
+      validators: [{ type: 'min', param: 1 }],
+      optional: true
+    },
+    suggested_by_id: {
+      type: String,
+      optional: true
+    },
+    purchased_by_id: {
+      type: String,
+      optional: true
+    },
+    asked_for: {
+      type: Boolean
+    },
+    on_user_list: {
+      type: String,
+      optional: true
+    }
+  },
+  methods: {},
+  indexes: {}
+});
+
+export const Logs = new Mongo.collection('logs');
+export const Log = Class.create({
+  name: 'Log',
+  collection: Logs,
+  secured: true,
+  fields: {
+    date: {
+      type: Date
+    },
+    action: {
+      type: String,
+      validators: [{ type: 'choice', param: ACTIONS }]
+    },
+    message: {
+      type: String
+    },
+    user_id: {
+      type: String,
+      optional: true
+    }
+  },
+  methods: {},
+  indexes: {}
+});
+
+export const SystemVals = new Mongo.collection('system');
+export const System = Class.create({
+  name: 'System',
+  collection: SystemVals,
+  secured: true,
+  fields: {
+    current_connections: {
+      type: Object,
+      default: () => {}
+    }
+  },
+  methods: {},
+  indexes: {}
+});
