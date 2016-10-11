@@ -10,7 +10,7 @@
 </template>
 
 <style scoped lang="scss">
-  @import "./colors.scss";
+  @import "./_colors.scss";
 
   .app-menu {
     margin: 32px 0;
