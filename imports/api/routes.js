@@ -51,7 +51,7 @@ Router.configure(router => {
       path: '/login',
       name: 'login',
       component: Login,
-      alias: '/logout',
+      alias: ['/register', '/logout'],
       beforeEnter: requireNoAuth
     },
     {
