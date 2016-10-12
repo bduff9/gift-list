@@ -3,7 +3,9 @@
     <h1 v-text="mode === 'login' ? 'Login' : 'Register'" />
     <article class="message is-success" v-if="route.path === '/logout'">
       <div class="message-body">
-        <i class="icon ion-ios-checkmark-outline" />
+        <span class="icon">
+          <i class="icon ion-ios-checkmark-outline" />
+        </span>
         <span>You have successfully signed out</span>
       </div>
     </article>

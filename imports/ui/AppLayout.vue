@@ -1,11 +1,13 @@
 <template>
-<div class="app-layout">
+<section class="section app-layout">
+  <div class="container">
   <!-- Menu -->
   <app-menu v-if="userId"></app-menu>
 
   <!-- Route content -->
   <router-view></router-view>
-</div>
+  </div>
+</section>
 </template>
 
 <script>
