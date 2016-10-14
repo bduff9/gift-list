@@ -13,8 +13,25 @@ import AppLayout from '../imports/ui/AppLayout.vue';
 Meteor.startup(() => {
 
   // Start the router
-  new Vue({
-    router: router.start(),
+  const routes = router.start();
+
+  routes.beforeEach((to, from, next) => {
+    const userId = Meteor.userId();
+    let doneRegistering = true;
+    if (!userId) {
+      next();
+      return;
+    }
+    //TODO they are logged in, check if they've finished registration
+    if (doneRegistering) {
+      next();
+    } else {
+      //TODO if they haven't finished registering, send them to the right step here
+    }
+  });
+
+  const vue = new Vue({
+    router: routes,
     render: h => h(AppLayout),
   }).$mount('app');
 

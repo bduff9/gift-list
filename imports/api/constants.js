@@ -9,3 +9,5 @@ export const ACTIONS = [
 ];
 
 export const SITE_NAME = 'Gift List';
+
+export const MIN_AGE = 13;
