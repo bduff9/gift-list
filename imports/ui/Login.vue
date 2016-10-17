@@ -60,18 +60,18 @@
       <button type="button" class="button is-info" @click.prevent="switchMode" v-if="$route.path !== '/logout'">
         <span>{{ mode === 'login' ? 'Register' : 'Login' }} Instead</span>
       </button>
-      <button type="submit" class="button is-primary">
+      <button type="submit" class="button is-primary" :class="{ 'is-loading': loading === 'email' }" v-bind:disabled="loading === 'email'">
         <span>{{ mode === 'login' ? 'Login' : 'Register' }}</span>
       </button>
       <button type="button" class="button is-warning" @click.prevent="resetPassword" v-if="mode === 'login'">
         <i class="icon ion-ios-help-outline" />
         <span>Forgot Password</span>
       </button>
-      <button type="button" class="button is-danger" @click.prevent="oauthLogin('loginWithGoogle', $event)">
+      <button type="button" class="button is-danger" :class="{ 'is-loading': loading === 'loginWithGoogle' }" v-bind:disabled="loading === 'loginWithGoogle'" @click.prevent="oauthLogin('loginWithGoogle', $event)">
         <i class="icon ion-social-google-outline" />
         <span>{{ mode === 'login' ? 'Login' : 'Register' }} with Google</span>
       </button>
-      <button type="button" class="button is-info" @click.prevent="oauthLogin('loginWithFacebook', $event)">
+      <button type="button" class="button is-info" :class="{ 'is-loading': loading === 'loginWithFacebook' }" v-bind:disabled="loading === 'loginWithFacebook'" @click.prevent="oauthLogin('loginWithFacebook', $event)">
         <i class="icon ion-social-facebook-outline" />
         <span>{{ mode === 'login' ? 'Login' : 'Register' }} with Facebook</span>
       </button>
@@ -105,6 +105,7 @@
         family: route.query.family || '',
         firstName: '',
         lastName: '',
+        loading: null,
         mode: (route.path === '/register' ? 'register' : 'login'),
         password: ''
       };
@@ -135,6 +136,7 @@
         jQuery(form).validate({
           errorClass: 'is-danger',
           submitHandler() {
+            that.loading = 'email';
             that[mode]();
           },
           rules: {
@@ -201,13 +203,30 @@
       },
       login() {
         const { email, password } = this;
-        alert(`TODO login ${email} with pass ${password}`);
+        Meteor.loginWithPassword(email, password, (err) => {
+          if (err) {
+            this.loading = null;
+            if (err.reason === 'User not found') {
+              displayError(err, { title: 'User not found!  Did you mean to register at the bottom of this page instead?', type: 'warning' });
+            } else {
+              displayError(err, { title: err.reason, type: 'warning' });
+            }
+          } else {
+            Bert.alert({
+              message: 'Welcome back!',
+              type: 'success',
+              icon: 'fa-thumbs-up'
+            });
+          }
+        });
       },
       oauthLogin(service, ev) {
         const options = {
           requestPermissions: ['email']
         };
+        this.loading = service;
         Meteor[service](options, (err) => {
+          this.loading = null;
           if (err) {
             displayError(err, { title: err.message, type: 'danger' });
           } else {
@@ -221,7 +240,22 @@
       },
       register() {
         const { email, password } = this;
-        alert(`TODO register ${email} with pass ${password}`);
+        Accounts.createUser({ email, password }, (err) => {
+          if (err) {
+            this.loading = null;
+            if (err.error && err.reason) {
+              displayError(err, { title: err.error, message: err.reason, type: 'warning' });
+            } else {
+              displayError(err);
+            }
+          } else {
+            Bert.alert({
+              message: 'Thanks for registering!',
+              type: 'success',
+              icon: 'fa-thumbs-up'
+            });
+          }
+        });
       },
       resetPassword(ev) {
         alert('TODO');
