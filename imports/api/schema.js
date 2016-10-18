@@ -95,7 +95,7 @@ export const User = Class.create({
   indexes: {}
 });
 
-export const Holidays = new Mongo.collection('holidays');
+export const Holidays = new Mongo.Collection('holidays');
 export const Holiday = Class.create({
   name: 'Holiday',
   collection: Holidays,
@@ -116,7 +116,7 @@ export const Holiday = Class.create({
   indexes: {}
 });
 
-export const Families = new Mongo.collection('families');
+export const Families = new Mongo.Collection('families');
 export const Family = Class.create({
   name: 'Family',
   collection: Families,
@@ -136,7 +136,7 @@ export const Family = Class.create({
   indexes: {}
 });
 
-export const Gifts = new Mongo.collection('gifts');
+export const Gifts = new Mongo.Collection('gifts');
 export const Gift = Class.create({
   name: 'Gift',
   collection: Gifts,
@@ -171,7 +171,7 @@ export const Gift = Class.create({
     },
     priority: {
       type: Number,
-      validators: [{ type: 'min', param: 1 }],
+      validators: [{ type: 'gte', param: 1 }],
       optional: true
     },
     suggested_by_id: {
@@ -194,7 +194,7 @@ export const Gift = Class.create({
   indexes: {}
 });
 
-export const Logs = new Mongo.collection('logs');
+export const Logs = new Mongo.Collection('logs');
 export const Log = Class.create({
   name: 'Log',
   collection: Logs,
@@ -219,7 +219,7 @@ export const Log = Class.create({
   indexes: {}
 });
 
-export const SystemVals = new Mongo.collection('system');
+export const SystemVals = new Mongo.Collection('system');
 export const System = Class.create({
   name: 'System',
   collection: SystemVals,
