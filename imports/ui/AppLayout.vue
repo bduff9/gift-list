@@ -1,13 +1,13 @@
 <template>
-<section class="section app-layout">
-  <div class="container">
-  <!-- Menu -->
-  <app-menu v-if="userId"></app-menu>
+  <section class="section app-layout">
+    <div class="container">
+      <!-- Menu -->
+      <app-menu v-if="userId"></app-menu>
 
-  <!-- Route content -->
-  <router-view></router-view>
-  </div>
-</section>
+      <!-- Route content -->
+      <router-view></router-view>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -20,9 +20,15 @@ export default {
     AppMenu
   },
   data() {
-    return {
-      userId: Meteor.userId()
-    };
+    return {};
+  },
+  meteor: {
+    subscribe: {},
+    data: {
+      userId() {
+        return Meteor.userId();
+      }
+    }
   }
 }
 </script>

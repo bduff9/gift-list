@@ -234,13 +234,13 @@
         });
       },
       redirectAfterAuth(msg) {
+        const redirect = Session.get('redirect') || '/';
         Bert.alert({
           message: msg,
           type: 'success',
           icon: 'fa-thumbs-up'
         });
-        //TODO redirect to where they were trying to go
-        this.$router.replace('/');
+        this.$router.replace(redirect);
       },
       register() {
         const { email, password } = this;

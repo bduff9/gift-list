@@ -19,7 +19,7 @@ export const writeLog = new ValidatedMethod({
     if (Meteor.isServer) {
       let logEntry = new Log({
         action,
-        when: new Date(),
+        date: new Date(),
         message,
         user_id: userId
       });
