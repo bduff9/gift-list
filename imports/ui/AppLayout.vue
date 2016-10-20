@@ -5,7 +5,7 @@
       <app-menu v-if="userId"></app-menu>
 
       <!-- Route content -->
-      <router-view></router-view>
+      <router-view v-if="$subReady.userData"></router-view>
     </div>
   </section>
 </template>
@@ -23,7 +23,9 @@ export default {
     return {};
   },
   meteor: {
-    subscribe: {},
+    subscribe: {
+      'userData': []
+    },
     data: {
       userId() {
         return Meteor.userId();

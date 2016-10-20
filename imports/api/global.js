@@ -30,3 +30,19 @@ export const pad = (toPad, padWith = '0', ln) => {
   while (padded.length < ln) padded = '' + padWith + padded;
   return padded;
 };
+
+export const getMonth = dt => {
+  const d = moment(dt);
+  let m;
+  if (!dt) return;
+  m = parseInt(d.format('M'), 10);
+  return m;
+};
+
+export const getDayOfMonth = dt => {
+  const d = moment(dt);
+  let dy;
+  if (!dt) return;
+  dy = parseInt(d.format('D'), 10);
+  return dy;
+};

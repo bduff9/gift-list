@@ -134,13 +134,12 @@
     methods: {
       beginValidating() {
         const that = this,
-            mode = that.mode,
             form = this.$refs.loginForm;
         jQuery(form).validate({
           errorClass: 'is-danger',
           submitHandler() {
             that.loading = 'email';
-            that[mode]();
+            that[that.mode]();
           },
           rules: {
             "first-name": {
@@ -243,8 +242,9 @@
         this.$router.replace(redirect);
       },
       register() {
-        const { email, password } = this;
-        Accounts.createUser({ email, password }, (err) => {
+        const { birthday, email, firstName, lastName, password } = this;
+        let profile = { birthday, firstName, lastName };
+        Accounts.createUser({ email, password, profile }, (err) => {
           if (err) {
             this.loading = null;
             if (err.error && err.reason) {

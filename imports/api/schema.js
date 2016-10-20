@@ -35,6 +35,21 @@ export const User = Class.create({
   collection: Meteor.users,
   secured: true,
   fields: {
+    createdAt: {
+      type: Date
+    },
+    services: {
+      type: Object
+    },
+    profile: {
+      type: Object
+    },
+    status: {
+      type: Object
+    },
+    registered_emails: {
+      type: [Object]
+    },
     email: {
       type: String,
       validators: [{ type: 'email' }],

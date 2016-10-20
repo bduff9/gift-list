@@ -2,8 +2,9 @@
 
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
+import { moment } from 'meteor/momentjs:moment';
 
-import { logError } from '../imports/api/global';
+import { getDayOfMonth, getMonth, logError } from '../imports/api/global';
 import { writeLog } from '../imports/api/collections/logs';
 
 const gmailUrl = Meteor.settings.private.gmail;
@@ -31,30 +32,43 @@ Meteor.startup(() => {
 
   Accounts.onCreateUser((options, user) => {
     const EMPTY_VAL = '';
-    let first_name = EMPTY_VAL,
-        last_name = EMPTY_VAL,
+    let firstName = EMPTY_VAL,
+        lastName = EMPTY_VAL,
         email = EMPTY_VAL,
         verified = true,
-        existingCount, fullName, logEntry;
+        profile = options.profile || {},
+        birthday, birthMonth, birthDayOfMonth, fullName, logEntry;
     if (user.services.facebook) {
-      first_name = user.services.facebook.first_name;
-      last_name = user.services.facebook.last_name;
+      firstName = user.services.facebook.first_name;
+      lastName = user.services.facebook.last_name;
       email = user.services.facebook.email;
     } else if (user.services.google) {
-      first_name = user.services.google.given_name;
-      last_name = user.services.google.family_name;
+      firstName = user.services.google.given_name;
+      lastName = user.services.google.family_name;
       email = user.services.google.email;
     } else {
+      firstName = profile.firstName;
+      delete profile.firstName;
+      lastName = profile.lastName;
+      delete profile.lastName;
+      profile.name = `${firstName} ${lastName}`;
       email = options.email;
+      birthday = moment(profile.birthday).toDate();
+      delete profile.birthday;
+      birthMonth = getMonth(birthday);
+      birthDayOfMonth = getDayOfMonth(birthday);
       verified = false;
     }
-    user.profile = options.profile || {};
-    user.first_name = first_name;
-    user.last_name = last_name;
+    user.profile = profile;
+    user.first_name = firstName;
+    user.last_name = lastName;
     user.email = email;
+    user.birthday = birthday;
+    user.birth_month = birthMonth;
+    user.birth_month_day = birthDayOfMonth;
     user.verified = verified;
     user.done_registering = false;
-    fullName = (first_name && last_name ? `${first_name} ${last_name}` : 'An unknown user');
+    fullName = (firstName && lastName ? `${firstName} ${lastName}` : 'An unknown user');
     writeLog.call({ userId: user._id, action: 'REGISTER', message: `${fullName} registered with email ${email}` }, logError);
     return user;
   });

@@ -4,9 +4,10 @@
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import Vue from 'vue';
-import router from '../imports/api/routes';
 
-// App layout
+import router from '../imports/api/routes';
+import { displayError } from '../imports/api/global';
+import { writeLog } from '../imports/api/collections/logs';
 import AppLayout from '../imports/ui/AppLayout.vue';
 
 // App start
@@ -15,26 +16,13 @@ Meteor.startup(() => {
   // Start the router
   const routes = router.start();
 
-  routes.beforeEach((to, from, next) => {
-    const userId = Meteor.userId();
-    let doneRegistering = true;
-    if (!userId) {
-      next();
-      return;
-    }
-    //TODO they are logged in, check if they've finished registration
-    if (doneRegistering) {
-      next();
-    } else {
-      //TODO if they haven't finished registering, send them to the right step here
-    }
-  });
-
+  // Start vue instance
   const vue = new Vue({
     router: routes,
     render: h => h(AppLayout),
   }).$mount('app');
 
+  // Log sign ins
   Accounts.onLogin(() => {
     const user = Meteor.user();
     if (user.first_name && user.last_name) {
