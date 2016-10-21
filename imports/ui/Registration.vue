@@ -35,7 +35,7 @@
             STEP_1 = '1',
             STEP_2 = '2',
             STEP_3 = '3';
-        if (!services.email) {
+        if (!services.password) {
           if (step !== STEP_1) this.$router.replace(`/registration/${STEP_1}`);
         } else if (!family_ids || family_ids.length === 0) {
           if (step !== STEP_2) this.$router.replace(`/registration/${STEP_2}`);
