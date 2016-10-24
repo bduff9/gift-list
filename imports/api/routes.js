@@ -2,6 +2,11 @@
 
 import { Meteor } from 'meteor/meteor';
 import { Router, nativeScrollBehavior } from 'meteor/akryum:vue-router2';
+import { Session } from 'meteor/session';
+
+import { displayError } from './global';
+import { writeLog } from './collections/logs';
+import { User } from './schema';
 
 // Components
 import GiftMaint from '../ui/GiftMaint.vue';
@@ -21,20 +26,33 @@ const router = new Router({
 });
 
 const requireAuth = (to, from, next) => {
-  const userId = Meteor.userId();
+  const userId = Meteor.userId(),
+      user = User.findOne(userId),
+      doneRegistering = user && user.done_registering,
+      isRegistration = to.path.indexOf('registration') > -1;
+console.log(user);
   if (!userId) { // No user signed in, redirect to signin screen
+    Session.set('redirect', to.fullPath);
     next('/login');
-  } else { // Already signed in, let them pass
+  } else if (doneRegistering || isRegistration) { // Already signed in, let them pass
     next();
+  } else {
+    next('/registration');
   }
 };
 
 const requireNoAuth = (to, from, next) => {
-  const userId = Meteor.userId();
+  const userId = Meteor.userId(),
+      user = Meteor.user();
   if (!userId) { // No user signed in, let them pass
     next();
   } else if (to.path === '/logout') { // User is trying to sign out
-    Meteor.logout(err => next());
+    Meteor.logout(err => {
+      writeLog.call({ userId: user._id, action: 'LOGOUT', message: `${user.first_name} ${user.last_name} successfully signed out` }, displayError);
+      Object.keys(Session.keys).forEach(key => Session.set(key, undefined));
+      Session.keys = {};
+      next();
+    });
   } else { // User is signed in, redirect to home
     next('/');
   }
@@ -55,7 +73,7 @@ Router.configure(router => {
     beforeEnter: requireNoAuth
   },
   {
-    path: '/register/:step',
+    path: '/registration/:step?',
     name: 'registration',
     component: Registration,
     beforeEnter: requireAuth

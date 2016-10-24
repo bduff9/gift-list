@@ -83,11 +83,13 @@
   'use strict';
 
   import { Meteor } from 'meteor/meteor';
+  import { Session } from 'meteor/session';
   import { Accounts } from 'meteor/accounts-base';
   import { Bert } from 'meteor/themeteorchef:bert';
 
   import { MIN_AGE } from '../api/constants';
-  import { getAge } from '../api/global';
+  import { displayError, getAge } from '../api/global';
+  import { sendVerificationEmail } from '../api/collections/users';
 
   jQuery.validator.addMethod('ofAge', function(val, el) {
     const age = getAge(val);
@@ -96,17 +98,19 @@
 
   export default {
     name: 'login-page',
+    beforeMount() {
+      const family = this.$route.query.family;
+      if (family) Session.set('familyToAdd', family);
+    },
     data() {
-      const route = this.$route;
       return {
         birthday: '',
         confirmPassword: '',
         email: '',
-        family: route.query.family || '',
         firstName: '',
         lastName: '',
         loading: null,
-        mode: (route.path === '/register' ? 'register' : 'login'),
+        mode: (this.$route.path === '/register' ? 'register' : 'login'),
         password: ''
       };
     },
@@ -131,13 +135,12 @@
     methods: {
       beginValidating() {
         const that = this,
-            mode = that.mode,
             form = this.$refs.loginForm;
         jQuery(form).validate({
           errorClass: 'is-danger',
           submitHandler() {
             that.loading = 'email';
-            that[mode]();
+            that[that.mode]();
           },
           rules: {
             "first-name": {
@@ -212,11 +215,7 @@
               displayError(err, { title: err.reason, type: 'warning' });
             }
           } else {
-            Bert.alert({
-              message: 'Welcome back!',
-              type: 'success',
-              icon: 'fa-thumbs-up'
-            });
+            this.redirectAfterAuth('Welcome back!');
           }
         });
       },
@@ -230,17 +229,23 @@
           if (err) {
             displayError(err, { title: err.message, type: 'danger' });
           } else {
-            Bert.alert({
-              message: 'Welcome!',
-              type: 'success',
-              icon: 'fa-thumbs-up'
-            });
+            this.redirectAfterAuth('Welcome!');
           }
         });
       },
+      redirectAfterAuth(msg) {
+        const redirect = Session.get('redirect') || '/';
+        Bert.alert({
+          message: msg,
+          type: 'success',
+          icon: 'fa-thumbs-up'
+        });
+        this.$router.replace(redirect);
+      },
       register() {
-        const { email, password } = this;
-        Accounts.createUser({ email, password }, (err) => {
+        const { birthday, email, firstName, lastName, password } = this;
+        let profile = { birthday, firstName, lastName };
+        Accounts.createUser({ email, password, profile }, err => {
           if (err) {
             this.loading = null;
             if (err.error && err.reason) {
@@ -249,16 +254,20 @@
               displayError(err);
             }
           } else {
-            Bert.alert({
-              message: 'Thanks for registering!',
-              type: 'success',
-              icon: 'fa-thumbs-up'
-            });
+            sendVerificationEmail.call({}, displayError);
+            this.redirectAfterAuth('Thanks for registering!');
           }
         });
       },
       resetPassword(ev) {
-        alert('TODO');
+        const { email } = this;
+        if (!email) {
+          Bert.alert({ type: 'warning', message: 'Please enter the email you registered with' });
+          return false;
+        }
+        Accounts.forgotPassword({ email }, err => {
+          Bert.alert({ type: 'success', message: `If found, password reset email will be sent for account associated with ${email}` });
+        });
       },
       switchMode(ev) {
         this.mode = (this.mode === 'login' ? 'register' : 'login');

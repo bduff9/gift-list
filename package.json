@@ -9,6 +9,9 @@
     "start": "meteor --settings settings.json",
     "debug": "meteor debug --settings settings.json"
   },
+  "engines": {
+    "node": "4.4.6"
+  },
   "dependencies": {
     "autoprefixer": "^6.5.0",
     "bcrypt": "^0.8.7",
