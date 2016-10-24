@@ -4,6 +4,12 @@ import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
 import { moment } from 'meteor/momentjs:moment';
 
+import '../imports/api/collections/families';
+import '../imports/api/collections/gifts';
+import '../imports/api/collections/holidays';
+import '../imports/api/collections/logs';
+import '../imports/api/collections/system';
+import '../imports/api/collections/users';
 import { getDayOfMonth, getMonth, logError } from '../imports/api/global';
 import { writeLog } from '../imports/api/collections/logs';
 

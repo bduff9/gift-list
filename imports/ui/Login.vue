@@ -89,6 +89,7 @@
 
   import { MIN_AGE } from '../api/constants';
   import { displayError, getAge } from '../api/global';
+  import { sendVerificationEmail } from '../api/collections/users';
 
   jQuery.validator.addMethod('ofAge', function(val, el) {
     const age = getAge(val);
@@ -244,7 +245,7 @@
       register() {
         const { birthday, email, firstName, lastName, password } = this;
         let profile = { birthday, firstName, lastName };
-        Accounts.createUser({ email, password, profile }, (err) => {
+        Accounts.createUser({ email, password, profile }, err => {
           if (err) {
             this.loading = null;
             if (err.error && err.reason) {
@@ -253,12 +254,20 @@
               displayError(err);
             }
           } else {
+            sendVerificationEmail.call({}, displayError);
             this.redirectAfterAuth('Thanks for registering!');
           }
         });
       },
       resetPassword(ev) {
-        alert('TODO');
+        const { email } = this;
+        if (!email) {
+          Bert.alert({ type: 'warning', message: 'Please enter the email you registered with' });
+          return false;
+        }
+        Accounts.forgotPassword({ email }, err => {
+          Bert.alert({ type: 'success', message: `If found, password reset email will be sent for account associated with ${email}` });
+        });
       },
       switchMode(ev) {
         this.mode = (this.mode === 'login' ? 'register' : 'login');
