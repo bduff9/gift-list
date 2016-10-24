@@ -13,8 +13,13 @@ body {
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
   font-weight: 300;
+  background-color: #FFE985;
 
   .is-danger {
     color: #ff3860;
+  }
+
+  .section {
+    background: none;
   }
 }
