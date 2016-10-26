@@ -1,8 +1,8 @@
 <template>
   <div class="registration">
+    <h1 v-text="'Complete Registration'" />
+    <progress class="progress" v-bind:value="progress" max="100" v-text="progress + '%'" />
     <div v-if="$route.params.step === '1'">
-      <h1 v-text="'Complete Registration'" />
-      <progress class="progress" v-bind:value="progress" max="100" v-text="progress + '%'" />
       <form ref="regForm" @submit.prevent.stop>
         <div class="control">
           <label class="label">Full Name</label>
@@ -50,7 +50,7 @@
             <i class="fa fa-lock" />
           </p>
         </div>
-        <button type="submit" class="button is-primary" :class="{ 'is-loading': loading === 'email' }" v-bind:disabled="loading === 'email'">
+        <button type="submit" class="button is-primary">
           <span>Next Step</span>
           <span class="icon">
             <i class="icon ion-arrow-right-a" />
@@ -76,6 +76,8 @@
 
   import { User } from '../api/schema';
   import { sendVerificationEmail } from '../api/collections/users';
+  import { MIN_AGE } from '../api/constants';
+  import { displayError, getAge } from '../api/global';
 
   export default {
     name: 'registration',
@@ -84,6 +86,13 @@
     },
     data() {
       return {
+        birthday: '',
+        confirmPassword: '',
+        email: '',
+        families: [],
+        firstName: '',
+        lastName: '',
+        password: '',
         wasResent: false
       };
     },
@@ -92,7 +101,48 @@
       data: {
         currentUser() {
           return User.findOne(Meteor.userId());
+        },
+        birthday() {
+          return this.currentUser.birthday;
+        },
+        confirmPassword() {
+          return this.currentUser.services.password;
+        },
+        email() {
+          return this.currentUser.email;
+        },
+        families() {
+          return this.currentUser.family_ids;
+        },
+        firstName() {
+          return this.currentUser.first_name;
+        },
+        lastName() {
+          return this.currentUser.last_name;
+        },
+        password() {
+          return this.currentUser.services.password;
         }
+      }
+    },
+    computed: {
+      age() {
+        return getAge(this.birthday);
+      },
+      progress() {
+        let progress = 0;
+        progress += (this.firstName ? 5 : 0);
+        progress += (this.lastName ? 6 : 0);
+        progress += (this.birthday ? 6 : 0);
+        progress += (this.email ? 6 : 0);
+        progress += (this.password ? 5 : 0);
+        progress += (this.confirmPassword ? 5 : 0);
+        progress += (this.families && this.families.length > 0 ? 33 : 0);
+        progress += (this.currentUser.verified ? 33 : 0);
+        return progress;
+      },
+      underage() {
+        return this.age < MIN_AGE;
       }
     },
     methods: {

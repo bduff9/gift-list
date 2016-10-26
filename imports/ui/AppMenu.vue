@@ -1,15 +1,15 @@
 <template>
-<div class="app-menu">
-  <router-link :to="{ name: 'home' }" exact>Home</router-link>
-  <router-link :to="{ name: 'my-list' }">My Gift List</router-link>
-  <router-link :to="{ name: 'other-lists' }">View Others' Lists</router-link>
-  <router-link :to="{ name: 'shopping-list' }">My Shopping List</router-link>
-  <router-link :to="{ name: 'settings' }">Settings</router-link>
-  <router-link to="/logout">Sign Out</router-link>
-</div>
+  <div class="app-menu">
+    <router-link :to="{ name: 'home' }" exact>Home</router-link>
+    <router-link :to="{ name: 'my-list' }">My Gift List</router-link>
+    <router-link :to="{ name: 'other-lists' }">View Others' Lists</router-link>
+    <router-link :to="{ name: 'shopping-list' }">My Shopping List</router-link>
+    <router-link :to="{ name: 'settings' }">Settings</router-link>
+    <router-link to="/logout">Sign Out</router-link>
+  </div>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
   @import "./_colors.scss";
 
   .app-menu {

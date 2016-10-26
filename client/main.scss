@@ -2,7 +2,7 @@
 @import "../imports/ui/colors";
 
 // Imports here
-@import "../node_modules/bulma/bulma.scss";
+@import "../node_modules/bulma_scss/bulma.scss";
 
 // Custom styles here
 html,
@@ -16,5 +16,9 @@ body {
 
   .is-danger {
     color: #ff3860;
+  }
+
+  .is-bold {
+    font-weight: 700;
   }
 }

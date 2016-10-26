@@ -42,4 +42,3 @@ prod-settings.json
 mup.*
 *.orig
 backup
-!bulma

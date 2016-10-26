@@ -280,7 +280,5 @@
 </script>
 
 <style scoped lang="scss">
-  .is-bold {
-    font-weight: 700;
-  }
+  
 </style>
