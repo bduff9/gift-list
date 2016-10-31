@@ -13,27 +13,37 @@
     <form ref="loginForm" @submit.prevent.stop>
       <div class="control" v-if="mode === 'register'">
         <label class="label">Full Name</label>
-        <div class="control is-grouped">
-          <p class="control has-icon is-expanded">
-            <input class="input" type="text" id="first-name" name="first-name" placeholder="First Name" v-model.trim="firstName" />
-            <i class="fa fa-user" />
-          </p>
-          <p class="control has-icon is-expanded">
-            <input class="input" type="text" id="last-name" name="last-name" placeholder="Last Name" v-model.trim="lastName" />
-            <i class="fa fa-user" />
-          </p>
+        <div class="control is-grouped columns is-desktop is-multiline">
+          <div class="column is-half-desktop is-12-mobile">
+            <p class="control has-icon is-expanded">
+              <input class="input" type="text" id="first-name" name="first-name" placeholder="First Name" v-model.trim="firstName" />
+              <i class="fa fa-user" />
+            </p>
+          </div>
+          <div class="column is-half-desktop is-12-mobile">
+            <p class="control has-icon is-expanded">
+              <input class="input" type="text" id="last-name" name="last-name" placeholder="Last Name" v-model.trim="lastName" />
+              <i class="fa fa-user" />
+            </p>
+          </div>
         </div>
       </div>
       <div class="control" v-if="mode === 'register'">
-        <label class="label">Date of Birth</label>
+        <div class="columns is-mobile">
+          <div class="column is-half">
+            <label class="label">Date of Birth</label>
+          </div>
+          <div class="column is-half">
+            <p class="control is-expanded" :class="{ 'is-danger': underage }">
+              <span class="is-bold">Age:</span> {{ age }}
+            <p>
+          </div>
+        </div>
         <div class="control is-grouped">
-          <p class="control has-icon is-expanded">
-            <input class="input" type="date" id="birthday" name="birthday" placeholder="Date of Birth" v-model.trim="birthday" />
-            <i class="fa fa-calendar" />
-          </p>
-          <p class="control is-expanded" :class="{ 'is-danger': underage }">
-            <span class="is-bold">Age:</span> {{ age }}
-          </p>
+            <p class="control has-icon is-expanded">
+              <input class="input" type="date" id="birthday" name="birthday" placeholder="Date of Birth" v-model.trim="birthday" />
+              <i class="fa fa-calendar" />
+            </p>
         </div>
       </div>
       <div class="control">
@@ -280,5 +290,5 @@
 </script>
 
 <style scoped lang="scss">
-  
+
 </style>

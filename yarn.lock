@@ -133,10 +133,6 @@ buffer@^4.5.1:
     ieee754 "^1.1.4"
     isarray "^1.0.0"
 
-bulma_scss@0.2.3-b:
-  version "0.2.3-b"
-  resolved "https://registry.yarnpkg.com/bulma_scss/-/bulma_scss-0.2.3-b.tgz#776b7fc3271e4b24f1ebc1c5b3e086c01bf85c77"
-
 caniuse-db@^1.0.30000539, caniuse-db@^1.0.30000554:
   version "1.0.30000570"
   resolved "https://registry.yarnpkg.com/caniuse-db/-/caniuse-db-1.0.30000570.tgz#21843913855f4873974850ee8ef9e628f53bc8de"
