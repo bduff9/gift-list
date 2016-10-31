@@ -1,6 +1,15 @@
 <template>
   <div class="login content">
-    <h1 v-text="mode === 'login' ? 'Login' : 'Register'" />
+    <div class="columns is-mobile has-text-centered">
+      <div class="column is-half-mobile">
+        <h1 v-text="mode === 'login' ? 'Login' : 'Register'" />
+      </div>
+      <div class="column is-half-mobile">
+        <button type="button" class="button is-info" @click.prevent="switchMode" v-if="$route.path !== '/logout'">
+          <span>{{ mode === 'login' ? 'Register' : 'Login' }} Instead</span>
+        </button>
+      </div>
+    </div>
     <article class="message is-success" v-if="$route.path === '/logout'">
       <div class="message-body">
         <span class="icon">
@@ -10,6 +19,26 @@
       </div>
     </article>
     <progress class="progress" v-bind:value="progress" max="100" v-if="mode === 'register'" v-text="progress + '%'" />
+    <div class="column is-10 is-offset-1">
+      <hr />
+    </div>
+    <div class="columns is-mobile has-text-centered social-login">
+      <div class="column is-half-mobile">
+        <button type="button" class="button is-danger" :class="{ 'is-loading': loading === 'loginWithGoogle' }" v-bind:disabled="loading === 'loginWithGoogle'" @click.prevent="oauthLogin('loginWithGoogle', $event)">
+          <i class="icon ion-social-google-outline" />
+          <span>{{ mode === 'login' ? 'Login' : 'Register' }} with Google</span>
+        </button>
+      </div>
+      <div class="column is-half-mobile">
+        <button type="button" class="button is-info" :class="{ 'is-loading': loading === 'loginWithFacebook' }" v-bind:disabled="loading === 'loginWithFacebook'" @click.prevent="oauthLogin('loginWithFacebook', $event)">
+          <i class="icon ion-social-facebook-outline" />
+          <span>{{ mode === 'login' ? 'Login' : 'Register' }} with Facebook</span>
+        </button>
+      </div>
+    </div>
+    <div class="column is-10 is-offset-">
+      <hr />
+    </div>
     <form ref="loginForm" @submit.prevent.stop>
       <div class="control" v-if="mode === 'register'">
         <label class="label">Full Name</label>
@@ -67,24 +96,20 @@
           <i class="fa fa-lock" />
         </p>
       </div>
-      <button type="button" class="button is-info" @click.prevent="switchMode" v-if="$route.path !== '/logout'">
-        <span>{{ mode === 'login' ? 'Register' : 'Login' }} Instead</span>
-      </button>
-      <button type="submit" class="button is-primary" :class="{ 'is-loading': loading === 'email' }" v-bind:disabled="loading === 'email'">
-        <span>{{ mode === 'login' ? 'Login' : 'Register' }}</span>
-      </button>
-      <button type="button" class="button is-warning" @click.prevent="resetPassword" v-if="mode === 'login'">
-        <i class="icon ion-ios-help-outline" />
-        <span>Forgot Password</span>
-      </button>
-      <button type="button" class="button is-danger" :class="{ 'is-loading': loading === 'loginWithGoogle' }" v-bind:disabled="loading === 'loginWithGoogle'" @click.prevent="oauthLogin('loginWithGoogle', $event)">
-        <i class="icon ion-social-google-outline" />
-        <span>{{ mode === 'login' ? 'Login' : 'Register' }} with Google</span>
-      </button>
-      <button type="button" class="button is-info" :class="{ 'is-loading': loading === 'loginWithFacebook' }" v-bind:disabled="loading === 'loginWithFacebook'" @click.prevent="oauthLogin('loginWithFacebook', $event)">
-        <i class="icon ion-social-facebook-outline" />
-        <span>{{ mode === 'login' ? 'Login' : 'Register' }} with Facebook</span>
-      </button>
+      <div class="columns is-mobile has-text-centered">
+        <div class="column is-half-mobile">
+          <button type="submit" class="button is-primary" :class="{ 'is-loading': loading === 'email' }" v-bind:disabled="loading === 'email'">
+            <span>{{ mode === 'login' ? 'Login' : 'Register' }}</span>
+          </button>
+        </div>
+        <div class="column is-half-mobile is-pulled-right">
+          <button type="button" class="button is-warning" @click.prevent="resetPassword" v-if="mode === 'login'">
+            <i class="icon ion-ios-help-outline" />
+            <span>Forgot Password</span>
+          </button>
+        </div>
+      </div>
+
     </form>
   </div>
 </template>
