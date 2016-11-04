@@ -24,6 +24,7 @@ akryum:vue-component
 akryum:vue-router2
 akryum:vue-sass
 aldeed:simple-schema
+bduff9:bulma
 email@1.1.18
 fortawesome:fontawesome
 fourseven:scss
@@ -42,4 +43,3 @@ splendido:accounts-meld
 static-html@1.1.12_1
 themeteorchef:bert
 themeteorchef:jquery-validation
-bduff9:bulma

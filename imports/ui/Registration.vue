@@ -50,7 +50,7 @@
             <i class="fa fa-lock" />
           </p>
         </div>
-        <button type="submit" class="button is-primary">
+        <button type="submit" class="button is-primary" :class="{ 'is-loading': loading }">
           <span>Next Step</span>
           <span class="icon">
             <i class="icon ion-arrow-right-a" />
@@ -92,6 +92,7 @@
         families: [],
         firstName: '',
         lastName: '',
+        loading: false,
         password: '',
         wasResent: false
       };
@@ -146,6 +147,72 @@
       }
     },
     methods: {
+      beginValidating() {
+        const that = this,
+            form = this.$refs.regForm;
+        jQuery(form).validate({
+          errorClass: 'is-danger',
+          submitHandler() {
+            that.submitStep1();
+          },
+          rules: {
+            "first-name": {
+              required: true,
+              minlength: 2
+            },
+            "last-name": {
+              required: true,
+              minlength: 2
+            },
+            "birthday": {
+              required: true,
+              ofAge: true
+            },
+            "email": {
+              required: true,
+              email: true
+            },
+            "password": {
+              required: true,
+              minlength: 6
+            },
+            "confirm-password": {
+              required: true,
+              equalTo: '#password'
+            }
+          },
+          messages: {
+            "first-name": {
+              required: 'First name is required',
+              minlength: jQuery.validator.format('First name must be at least {0} characters')
+            },
+            "last-name": {
+              required: 'Last name is required',
+              minlength: jQuery.validator.format('Last name must be at least {0} characters')
+            },
+            "birthday": {
+              required: 'Date of birth is required',
+              ofAge: `You must be at least ${MIN_AGE} to sign up.  Ask your parent to add you to their account.`
+            },
+            "email": {
+              required: 'Email is required',
+              email: 'Enter a valid email address'
+            },
+            "confirm-email": {
+              required: 'Enter your email again',
+              equalTo: 'Enter the same email again'
+            },
+            "password": {
+              required: 'Password is required',
+              minlength: jQuery.validator.format('Password must be at least {0} characters')
+            },
+            "confirm-password": {
+              required: 'Enter your desired password again',
+              equalTo: 'Enter the same password again'
+            }
+          }
+        });
+      },
       redirectToStep() {
         const { currentUser } = this,
             { family_ids, services } = currentUser,
@@ -167,7 +234,26 @@
       resendEmail(ev) {
         this.wasResent = true;
         sendVerificationEmail.call({}, displayError);
+      },
+      submitStep1() {
+        const { birthday, email, firstName, lastName, password } = this;
+        let profile = { birthday, firstName, lastName };
+        Accounts.createUser({ email, password, profile }, err => {
+          if (err) {
+            this.loading = false;
+            if (err.error && err.reason) {
+              displayError(err, { title: err.error, message: err.reason, type: 'warning' });
+            } else {
+              displayError(err);
+            }
+          } else {
+            this.redirectToStep();
+          }
+        });
       }
+    },
+    mounted() {
+      this.beginValidating();
     },
     watch: {
       '$route'(to, from) {

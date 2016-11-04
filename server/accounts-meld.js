@@ -4,6 +4,7 @@ import { Meteor } from 'meteor/meteor';
 
 const meldUserCallback = (origUser, newUser) => {
   const meldedUser = Object.assign({}, newUser, origUser);
+console.log('meld called...');
   return meldedUser;
 };
 
