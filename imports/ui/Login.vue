@@ -1,13 +1,12 @@
 <template>
   <div class="login content">
     <div class="columns is-mobile has-text-centered">
-      <div class="column is-half-mobile">
+      <div class="column">
         <h1 v-text="mode === 'login' ? 'Login' : 'Register'" />
-      </div>
-      <div class="column is-half-mobile">
-        <button type="button" class="button is-info" @click.prevent="switchMode" v-if="$route.path !== '/logout'">
+        &nbsp;&nbsp;
+        <a class="is-info" href="#" @click.prevent="switchMode" v-if="$route.path !== '/logout'">
           <span>{{ mode === 'login' ? 'Register' : 'Login' }} Instead</span>
-        </button>
+        </a>
       </div>
     </div>
     <article class="message is-success" v-if="$route.path === '/logout'">
@@ -96,13 +95,13 @@
           <i class="fa fa-lock" />
         </p>
       </div>
-      <div class="columns is-mobile has-text-centered">
-        <div class="column is-half-mobile">
+      <div class="columns is-multiline is-mobile has-text-centered">
+        <div class="column is-12-mobile">
           <button type="submit" class="button is-primary" :class="{ 'is-loading': loading === 'email' }" v-bind:disabled="loading === 'email'">
             <span>{{ mode === 'login' ? 'Login' : 'Register' }}</span>
           </button>
         </div>
-        <div class="column is-half-mobile is-pulled-right">
+        <div class="column is-12-mobile">
           <button type="button" class="button is-warning" @click.prevent="resetPassword" v-if="mode === 'login'">
             <i class="icon ion-ios-help-outline" />
             <span>Forgot Password</span>
@@ -315,5 +314,15 @@
 </script>
 
 <style scoped lang="scss">
+
+  div {
+    .column {
+      button {
+        .button {
+          width: 100%;
+        }
+      }
+    }
+  }  
 
 </style>
