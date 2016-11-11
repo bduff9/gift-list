@@ -43,7 +43,7 @@ Meteor.startup(() => {
         email = EMPTY_VAL,
         verified = true,
         profile = options.profile || {},
-        birthday, birthMonth, birthDayOfMonth, fullName, logEntry;
+        birthday, birthMonth, birthDayOfMonth, fullName, existingUser, logEntry;
     if (user.services.facebook) {
       firstName = user.services.facebook.first_name;
       lastName = user.services.facebook.last_name;
@@ -64,6 +64,30 @@ Meteor.startup(() => {
       birthMonth = getMonth(birthday);
       birthDayOfMonth = getDayOfMonth(birthday);
       verified = false;
+    }
+    existingUser = Meteor.users.findOne({ "registered_emails.address": email });
+    if (existingUser) {
+// pull out all pieces of new
+      user = existingUser;
+// if missing or service is email, overwrite user values
+/* old service - service merge code
+const meldedUser = Object.assign({}, newUser, origUser);
+*/
+/* old password - service merge code
+let firstName = user.first_name,
+    lastName = user.last_name,
+    fullName = user.profile && user.profile.name;
+if (serviceName === 'facebook') {
+  firstName = firstName || user.services.facebook.first_name;
+  lastName = lastName || user.services.facebook.last_name;
+  fullName = fullName || `${firstName} ${lastName}`;
+} else if (serviceName === 'google') {
+  firstName = firstName || user.services.google.given_name;
+  lastName = lastName || user.services.google.family_name;
+  fullName = fullName || `${firstName} ${lastName}`;
+}
+*/
+      Meteor.users.remove({ _id: existingUser._id });
     }
     user.profile = profile;
     user.first_name = firstName;

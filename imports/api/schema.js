@@ -27,7 +27,7 @@ export const Notification = Class.create({
   fields: {
     //TODO fill in notification key/values
   },
-  methods: {}
+  helpers: {}
 });
 
 export const User = Class.create({
@@ -106,7 +106,7 @@ export const User = Class.create({
       default: () => {}
     }
   },
-  methods: {},
+  helpers: {},
   indexes: {}
 });
 
@@ -127,7 +127,7 @@ export const Holiday = Class.create({
       default: () => new Date()
     }
   },
-  methods: {},
+  helpers: {},
   indexes: {}
 });
 
@@ -147,7 +147,7 @@ export const Family = Class.create({
       type: Boolean
     }
   },
-  methods: {},
+  helpers: {},
   indexes: {}
 });
 
@@ -205,7 +205,7 @@ export const Gift = Class.create({
       optional: true
     }
   },
-  methods: {},
+  helpers: {},
   indexes: {}
 });
 
@@ -230,7 +230,7 @@ export const Log = Class.create({
       optional: true
     }
   },
-  methods: {},
+  helpers: {},
   indexes: {}
 });
 
@@ -245,6 +245,6 @@ export const System = Class.create({
       default: () => {}
     }
   },
-  methods: {},
+  helpers: {},
   indexes: {}
 });
