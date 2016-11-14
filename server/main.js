@@ -20,7 +20,7 @@ Meteor.startup(() => {
 
   Meteor.onConnection(conn => {
     //TODO remove and fix code below
-    console.log(`New connection ${conn}`);
+    console.log('New connection', conn);
     /*const systemVal = SystemVal.findOne();
     let newConn = {
       opened: new Date(),
@@ -37,18 +37,22 @@ Meteor.startup(() => {
   });
 
   Accounts.onCreateUser((options, user) => {
-    const EMPTY_VAL = '';
+console.log('user', user);
+    const EMPTY_VAL = '',
+        service = Object.keys(user.services)[0];
     let firstName = EMPTY_VAL,
         lastName = EMPTY_VAL,
         email = EMPTY_VAL,
         verified = true,
         profile = options.profile || {},
-        birthday, birthMonth, birthDayOfMonth, fullName, existingUser, logEntry;
-    if (user.services.facebook) {
+        existingUser = Meteor.user(),
+        overwrite = service === 'password',
+        birthday, birthMonth, birthDayOfMonth, fullName, serviceObj, logEntry;
+    if (service === 'facebook') {
       firstName = user.services.facebook.first_name;
       lastName = user.services.facebook.last_name;
       email = user.services.facebook.email;
-    } else if (user.services.google) {
+    } else if (service === 'google') {
       firstName = user.services.google.given_name;
       lastName = user.services.google.family_name;
       email = user.services.google.email;
@@ -65,39 +69,23 @@ Meteor.startup(() => {
       birthDayOfMonth = getDayOfMonth(birthday);
       verified = false;
     }
-    existingUser = Meteor.users.findOne({ "registered_emails.address": email });
+    existingUser = existingUser || Meteor.users.findOne({ "email": email });
     if (existingUser) {
-// pull out all pieces of new
-      user = existingUser;
-// if missing or service is email, overwrite user values
-/* old service - service merge code
-const meldedUser = Object.assign({}, newUser, origUser);
-*/
-/* old password - service merge code
-let firstName = user.first_name,
-    lastName = user.last_name,
-    fullName = user.profile && user.profile.name;
-if (serviceName === 'facebook') {
-  firstName = firstName || user.services.facebook.first_name;
-  lastName = lastName || user.services.facebook.last_name;
-  fullName = fullName || `${firstName} ${lastName}`;
-} else if (serviceName === 'google') {
-  firstName = firstName || user.services.google.given_name;
-  lastName = lastName || user.services.google.family_name;
-  fullName = fullName || `${firstName} ${lastName}`;
-}
-*/
+console.log('existingUser', existingUser);
+      serviceObj = user.services[service];
+      if (!existingUser.services[service]) existingUser.services[service] = serviceObj;
       Meteor.users.remove({ _id: existingUser._id });
+      user = existingUser;
     }
-    user.profile = profile;
-    user.first_name = firstName;
-    user.last_name = lastName;
-    user.email = email;
-    user.birthday = birthday;
-    user.birth_month = birthMonth;
-    user.birth_month_day = birthDayOfMonth;
-    user.verified = verified;
-    user.done_registering = false;
+    if (!user.profile || overwrite) user.profile = profile;
+    if (!user.first_name || overwrite) user.first_name = firstName;
+    if (!user.last_name || overwrite) user.last_name = lastName;
+    if (!user.email) user.email = email;
+    if (!user.birthday) user.birthday = birthday;
+    if (!user.birth_month) user.birth_month = birthMonth;
+    if (!user.birth_month_day) user.birth_month_day = birthDayOfMonth;
+    if (user.verified === false) user.verified = verified;
+    if (user.done_registering == null) user.done_registering = false;
     fullName = (firstName && lastName ? `${firstName} ${lastName}` : 'An unknown user');
     writeLog.call({ userId: user._id, action: 'REGISTER', message: `${fullName} registered with email ${email}` }, logError);
     return user;

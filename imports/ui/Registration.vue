@@ -214,6 +214,7 @@
         });
       },
       redirectToStep() {
+        console.log('redirectToStep');
         const { currentUser } = this,
             { family_ids, services } = currentUser,
             step = this.$route.params.step,
