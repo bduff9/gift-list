@@ -36,8 +36,11 @@ Meteor.startup(() => {
     });*/
   });
 
+  Accounts.config({
+    sendVerificationEmail: false
+  });
+
   Accounts.onCreateUser((options, user) => {
-console.log('user', user);
     const EMPTY_VAL = '',
         service = Object.keys(user.services)[0];
     let firstName = EMPTY_VAL,
@@ -71,7 +74,6 @@ console.log('user', user);
     }
     existingUser = existingUser || Meteor.users.findOne({ "email": email });
     if (existingUser) {
-console.log('existingUser', existingUser);
       serviceObj = user.services[service];
       if (!existingUser.services[service]) existingUser.services[service] = serviceObj;
       Meteor.users.remove({ _id: existingUser._id });
@@ -84,7 +86,7 @@ console.log('existingUser', existingUser);
     if (!user.birthday) user.birthday = birthday;
     if (!user.birth_month) user.birth_month = birthMonth;
     if (!user.birth_month_day) user.birth_month_day = birthDayOfMonth;
-    if (user.verified === false) user.verified = verified;
+    if (!user.verified) user.verified = verified;
     if (user.done_registering == null) user.done_registering = false;
     fullName = (firstName && lastName ? `${firstName} ${lastName}` : 'An unknown user');
     writeLog.call({ userId: user._id, action: 'REGISTER', message: `${fullName} registered with email ${email}` }, logError);

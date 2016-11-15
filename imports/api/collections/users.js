@@ -2,6 +2,10 @@
 
 import { Meteor } from 'meteor/meteor';
 import { Accounts } from 'meteor/accounts-base';
+import { moment } from 'meteor/momentjs:moment';
+
+import { getDayOfMonth, getMonth } from '../global';
+import { User } from '../schema';
 
 export const sendVerificationEmail = new ValidatedMethod({
   name: 'User.resend',
@@ -10,6 +14,36 @@ export const sendVerificationEmail = new ValidatedMethod({
     if (!this.userId) throw new Meteor.Error('User.resend.notLoggedIn', 'Must be logged in to resend verification email');
     if (Meteor.isServer) {
       Accounts.sendVerificationEmail(this.userId);
+    }
+  }
+});
+
+export const updateUser = new ValidatedMethod({
+  name: 'User.update',
+  validate: new SimpleSchema({
+    birthday: { type: String, label: 'Date of Birth' },
+    firstName: { type: String, label: 'First Name' },
+    lastName: { type: String, label: 'Last Name' },
+    password: { type: String, label: 'Password', min: 6 }
+  }).validator(),
+  run({ birthday, firstName, lastName, password }) {
+    const user = User.findOne(this.userId);
+    let profile = {},
+        birthDt, birthMonth, birthDayOfMonth;
+    if (!this.userId) throw new Meteor.Error('User.update.notLoggedIn', 'Must be logged in to update user profile');
+    if (Meteor.isServer) {
+      Accounts.setPassword(this.userId, password, { logout: false });
+      profile.name = `${firstName} ${lastName}`;
+      birthDt = moment(birthday).toDate();
+      birthMonth = getMonth(birthday);
+      birthDayOfMonth = getDayOfMonth(birthday);
+      user.profile = profile;
+      user.first_name = firstName;
+      user.last_name = lastName;
+      user.birthday = birthDt;
+      user.birth_month = birthMonth;
+      user.birth_month_day = birthDayOfMonth;
+      user.save();
     }
   }
 });

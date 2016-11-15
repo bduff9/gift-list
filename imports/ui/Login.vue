@@ -145,7 +145,8 @@
         lastName: '',
         loading: null,
         mode: (this.$route.path === '/register' ? 'register' : 'login'),
-        password: ''
+        password: '',
+        validator: null
       };
     },
     computed: {
@@ -170,7 +171,7 @@
       beginValidating() {
         const that = this,
             form = this.$refs.loginForm;
-        jQuery(form).validate({
+        this.validator = jQuery(form).validate({
           errorClass: 'is-danger',
           submitHandler() {
             that.loading = 'email';
@@ -288,14 +289,18 @@
               displayError(err);
             }
           } else {
-            sendVerificationEmail.call({}, displayError);
+            sendVerificationEmail.call({}, err => {
+              //TODO handle this error better?
+              console.error('Error on sendVerificationEmail', err);
+            });
             this.redirectAfterAuth('Thanks for registering!');
           }
         });
       },
       resetPassword(ev) {
-        const { email } = this;
-        if (!email) {
+        const { email, validator } = this,
+            validEmail = validator.element('#email');
+        if (!email || !validEmail) {
           Bert.alert({ type: 'warning', message: 'Please enter the email you registered with' });
           return false;
         }
@@ -323,6 +328,5 @@
         }
       }
     }
-  }  
-
+  }
 </style>

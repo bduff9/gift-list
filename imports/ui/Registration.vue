@@ -75,7 +75,7 @@
   import { Meteor } from 'meteor/meteor';
 
   import { User } from '../api/schema';
-  import { sendVerificationEmail } from '../api/collections/users';
+  import { sendVerificationEmail, updateUser } from '../api/collections/users';
   import { MIN_AGE } from '../api/constants';
   import { displayError, getAge } from '../api/global';
 
@@ -98,10 +98,14 @@
       };
     },
     meteor: {
-      subscribe: {},
+      subscribe: {
+        'userData': []
+      },
       data: {
         currentUser() {
-          return User.findOne(Meteor.userId());
+          const currentUser = User.findOne(Meteor.userId());
+          if (!currentUser) this.$router.replace('/');
+          return currentUser;
         },
         birthday() {
           return this.currentUser.birthday;
@@ -153,6 +157,7 @@
         jQuery(form).validate({
           errorClass: 'is-danger',
           submitHandler() {
+            that.loading = true;
             that.submitStep1();
           },
           rules: {
@@ -213,15 +218,17 @@
           }
         });
       },
-      redirectToStep() {
-        console.log('redirectToStep');
+      redirectToStep(newStep) {
         const { currentUser } = this,
             { family_ids, services } = currentUser,
             step = this.$route.params.step,
             STEP_1 = '1',
             STEP_2 = '2',
             STEP_3 = '3';
-        if (!services.password) {
+        console.log('currentUser', currentUser);
+        if (newStep) {
+          if (step !== newStep) this.$router.replace(`/registration/${newStep}`);
+        } else if (!services.password) {
           if (step !== STEP_1) this.$router.replace(`/registration/${STEP_1}`);
         } else if (!family_ids || family_ids.length === 0) {
           if (step !== STEP_2) this.$router.replace(`/registration/${STEP_2}`);
@@ -239,16 +246,16 @@
       submitStep1() {
         const { birthday, email, firstName, lastName, password } = this;
         let profile = { birthday, firstName, lastName };
-        Accounts.createUser({ email, password, profile }, err => {
+        updateUser.call({ birthday, firstName, lastName, password }, err => {
+          this.loading = false;
           if (err) {
-            this.loading = false;
             if (err.error && err.reason) {
               displayError(err, { title: err.error, message: err.reason, type: 'warning' });
             } else {
               displayError(err);
             }
           } else {
-            this.redirectToStep();
+            this.redirectToStep(2);
           }
         });
       }

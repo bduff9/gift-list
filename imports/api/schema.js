@@ -47,9 +47,6 @@ export const User = Class.create({
     status: {
       type: Object
     },
-    registered_emails: {
-      type: [Object]
-    },
     email: {
       type: String,
       validators: [{ type: 'email' }],
@@ -91,7 +88,8 @@ export const User = Class.create({
     },
     family_ids: {
       type: [String],
-      validators: [{ type: 'minLength', param: 1 }]
+      validators: [{ type: 'minLength', param: 1 }],
+      optional: true
     },
     admin_family_ids: {
       type: [String],
