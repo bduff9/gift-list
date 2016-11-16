@@ -1,115 +1,117 @@
 <template>
-  <div class="login content">
-    <div class="columns is-mobile has-text-centered">
+  <div class="window columns">
+    <div class="login content column is-8 is-offset-2">
+      <div class="columns is-mobile has-text-centered">
+        <div class="column">
+          <h1 v-text="mode === 'login' ? 'Login' : 'Register'" />
+          &nbsp;&nbsp;
+          <a class="is-info" href="#" @click.prevent="switchMode" v-if="$route.path !== '/logout'">
+            <span>{{ mode === 'login' ? 'Register' : 'Login' }} Instead</span>
+          </a>
+        </div>
+      </div>
+      <article class="message is-success" v-if="$route.path === '/logout'">
+        <div class="message-body">
+          <span class="icon">
+            <i class="icon ion-ios-checkmark-outline" />
+          </span>
+          <span>You have successfully signed out</span>
+        </div>
+      </article>
+      <progress class="progress" v-bind:value="progress" max="100" v-if="mode === 'register'" v-text="progress + '%'" />
       <div class="column">
-        <h1 v-text="mode === 'login' ? 'Login' : 'Register'" />
-        &nbsp;&nbsp;
-        <a class="is-info" href="#" @click.prevent="switchMode" v-if="$route.path !== '/logout'">
-          <span>{{ mode === 'login' ? 'Register' : 'Login' }} Instead</span>
-        </a>
+        <hr />
       </div>
-    </div>
-    <article class="message is-success" v-if="$route.path === '/logout'">
-      <div class="message-body">
-        <span class="icon">
-          <i class="icon ion-ios-checkmark-outline" />
-        </span>
-        <span>You have successfully signed out</span>
-      </div>
-    </article>
-    <progress class="progress" v-bind:value="progress" max="100" v-if="mode === 'register'" v-text="progress + '%'" />
-    <div class="column is-10 is-offset-1">
-      <hr />
-    </div>
-    <div class="columns is-mobile has-text-centered social-login">
-      <div class="column is-half-mobile">
-        <button type="button" class="button is-danger" :class="{ 'is-loading': loading === 'loginWithGoogle' }" v-bind:disabled="loading === 'loginWithGoogle'" @click.prevent="oauthLogin('loginWithGoogle', $event)">
-          <i class="icon ion-social-google-outline" />
-          <span>{{ mode === 'login' ? 'Login' : 'Register' }} with Google</span>
-        </button>
-      </div>
-      <div class="column is-half-mobile">
-        <button type="button" class="button is-info" :class="{ 'is-loading': loading === 'loginWithFacebook' }" v-bind:disabled="loading === 'loginWithFacebook'" @click.prevent="oauthLogin('loginWithFacebook', $event)">
-          <i class="icon ion-social-facebook-outline" />
-          <span>{{ mode === 'login' ? 'Login' : 'Register' }} with Facebook</span>
-        </button>
-      </div>
-    </div>
-    <div class="column is-10 is-offset-">
-      <hr />
-    </div>
-    <form ref="loginForm" @submit.prevent.stop>
-      <div class="control" v-if="mode === 'register'">
-        <label class="label">Full Name</label>
-        <div class="control is-grouped columns is-desktop is-multiline">
-          <div class="column is-half-desktop is-12-mobile">
-            <p class="control has-icon is-expanded">
-              <input class="input" type="text" id="first-name" name="first-name" placeholder="First Name" v-model.trim="firstName" />
-              <i class="fa fa-user" />
-            </p>
-          </div>
-          <div class="column is-half-desktop is-12-mobile">
-            <p class="control has-icon is-expanded">
-              <input class="input" type="text" id="last-name" name="last-name" placeholder="Last Name" v-model.trim="lastName" />
-              <i class="fa fa-user" />
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="control" v-if="mode === 'register'">
-        <div class="columns is-mobile">
-          <div class="column is-half">
-            <label class="label">Date of Birth</label>
-          </div>
-          <div class="column is-half">
-            <p class="control is-expanded" :class="{ 'is-danger': underage }">
-              <span class="is-bold">Age:</span> {{ age }}
-            <p>
-          </div>
-        </div>
-        <div class="control is-grouped">
-            <p class="control has-icon is-expanded">
-              <input class="input" type="date" id="birthday" name="birthday" placeholder="Date of Birth" v-model.trim="birthday" />
-              <i class="fa fa-calendar" />
-            </p>
-        </div>
-      </div>
-      <div class="control">
-        <label class="label">Email</label>
-        <p class="control has-icon">
-          <input class="input" type="email" id="email" name="email" placeholder="Email Address" v-model.trim="email" />
-          <i class="fa fa-envelope" />
-        </p>
-      </div>
-      <div class="control">
-        <label class="label">Password</label>
-        <p class="control has-icon">
-          <input class="input" type="password" id="password" name="password" placeholder="Password" v-model="password" />
-          <i class="fa fa-lock" />
-        </p>
-      </div>
-      <div class="control" v-if="mode === 'register'">
-        <label class="label">Confirm Password</label>
-        <p class="control has-icon">
-          <input class="input" type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" v-model="confirmPassword" />
-          <i class="fa fa-lock" />
-        </p>
-      </div>
-      <div class="columns is-multiline is-mobile has-text-centered">
-        <div class="column is-12-mobile">
-          <button type="submit" class="button is-primary" :class="{ 'is-loading': loading === 'email' }" v-bind:disabled="loading === 'email'">
-            <span>{{ mode === 'login' ? 'Login' : 'Register' }}</span>
+      <div class="columns is-mobile has-text-centered social-login">
+        <div class="column is-3-mobile is-offset-3-mobile">
+          <button type="button" class="button is-danger" :class="{ 'is-loading': loading === 'loginWithGoogle' }" v-bind:disabled="loading === 'loginWithGoogle'" @click.prevent="oauthLogin('loginWithGoogle', $event)">
+            <i class="icon ion-social-google-outline" />
+            <span class="is-hidden-mobile">{{ mode === 'login' ? 'Login' : 'Register' }} with Google</span>
           </button>
         </div>
-        <div class="column is-12-mobile">
-          <button type="button" class="button is-warning" @click.prevent="resetPassword" v-if="mode === 'login'">
-            <i class="icon ion-ios-help-outline" />
-            <span>Forgot Password</span>
+        <div class="column is-3-mobile">
+          <button type="button" class="button is-info" :class="{ 'is-loading': loading === 'loginWithFacebook' }" v-bind:disabled="loading === 'loginWithFacebook'" @click.prevent="oauthLogin('loginWithFacebook', $event)">
+            <i class="icon ion-social-facebook-outline" />
+            <span class="is-hidden-mobile">{{ mode === 'login' ? 'Login' : 'Register' }} with Facebook</span>
           </button>
         </div>
       </div>
+      <div class="column">
+        <hr />
+      </div>
+      <form ref="loginForm" @submit.prevent.stop>
+        <div class="control" v-if="mode === 'register'">
+          <label class="label">Full Name</label>
+          <div class="control is-grouped columns is-desktop is-multiline">
+            <div class="column is-half-desktop is-12-mobile">
+              <p class="control has-icon is-expanded">
+                <input class="input" type="text" id="first-name" name="first-name" placeholder="First Name" v-model.trim="firstName" />
+                <i class="fa fa-user" />
+              </p>
+            </div>
+            <div class="column is-half-desktop is-12-mobile">
+              <p class="control has-icon is-expanded">
+                <input class="input" type="text" id="last-name" name="last-name" placeholder="Last Name" v-model.trim="lastName" />
+                <i class="fa fa-user" />
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="control" v-if="mode === 'register'">
+          <div class="columns is-mobile">
+            <div class="column is-half">
+              <label class="label">Date of Birth</label>
+            </div>
+            <div class="column is-half">
+              <p class="control is-expanded" :class="{ 'is-danger': underage }">
+                <span class="is-bold">Age:</span> {{ age }}
+              <p>
+            </div>
+          </div>
+          <div class="control is-grouped">
+              <p class="control has-icon is-expanded">
+                <input class="input" type="date" id="birthday" name="birthday" placeholder="Date of Birth" v-model.trim="birthday" />
+                <i class="fa fa-calendar" />
+              </p>
+          </div>
+        </div>
+        <div class="control">
+          <label class="label">Email</label>
+          <p class="control has-icon">
+            <input class="input" type="email" id="email" name="email" placeholder="Email Address" v-model.trim="email" />
+            <i class="fa fa-envelope" />
+          </p>
+        </div>
+        <div class="control">
+          <label class="label">Password</label>
+          <p class="control has-icon">
+            <input class="input" type="password" id="password" name="password" placeholder="Password" v-model="password" />
+            <i class="fa fa-lock" />
+          </p>
+        </div>
+        <div class="control" v-if="mode === 'register'">
+          <label class="label">Confirm Password</label>
+          <p class="control has-icon">
+            <input class="input" type="password" id="confirm-password" name="confirm-password" placeholder="Confirm Password" v-model="confirmPassword" />
+            <i class="fa fa-lock" />
+          </p>
+        </div>
+        <div class="columns is-multiline is-mobile has-text-centered">
+          <div class="column is-12-mobile">
+            <button type="submit" class="button is-clear" :class="{ 'is-loading': loading === 'email' }" v-bind:disabled="loading === 'email'">
+              <span>{{ mode === 'login' ? 'Login' : 'Register' }}</span>
+            </button>
+          </div>
+          <div class="column is-12-mobile" v-if="mode === 'login'">
+            <button type="button" class="button is-clear" @click.prevent="resetPassword">
+              <i class="icon ion-ios-help-outline" />
+              <span>Forgot Password</span>
+            </button>
+          </div>
+        </div>
 
-    </form>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -320,13 +322,16 @@
 
 <style scoped lang="scss">
 
-  div {
-    .column {
-      button {
         .button {
           width: 100%;
+
+            &.is-clear {
+              background: none;
+              border-color: gray;
+              border-width: 2px;
+              color: gray;
+              font-weight: 700;
+            }
         }
-      }
-    }
-  }
+
 </style>
