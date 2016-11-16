@@ -27,13 +27,12 @@ export const updateUser = new ValidatedMethod({
     password: { type: String, label: 'Password', min: 6 }
   }).validator(),
   run({ birthday, firstName, lastName, password }) {
-    const user = User.findOne(this.userId);
-    let profile = {},
-        birthDt, birthMonth, birthDayOfMonth;
+    let profile = { name: `${firstName} ${lastName}` },
+        user, birthDt, birthMonth, birthDayOfMonth;
     if (!this.userId) throw new Meteor.Error('User.update.notLoggedIn', 'Must be logged in to update user profile');
     if (Meteor.isServer) {
       Accounts.setPassword(this.userId, password, { logout: false });
-      profile.name = `${firstName} ${lastName}`;
+      user = User.findOne(this.userId);
       birthDt = moment(birthday).toDate();
       birthMonth = getMonth(birthday);
       birthDayOfMonth = getDayOfMonth(birthday);

@@ -88,6 +88,7 @@
       return {
         birthday: '',
         confirmPassword: '',
+        currentUser: null,
         email: '',
         families: [],
         firstName: '',
@@ -98,14 +99,12 @@
       };
     },
     meteor: {
-      subscribe: {
-        'userData': []
-      },
+      subscribe: {},
       data: {
         currentUser() {
-          const currentUser = User.findOne(Meteor.userId());
-          if (!currentUser) this.$router.replace('/');
-          return currentUser;
+          const userId = Meteor.userId();
+          if (!userId) this.$router.replace('/');
+          return User.findOne(userId);
         },
         birthday() {
           return this.currentUser.birthday;
@@ -225,7 +224,6 @@
             STEP_1 = '1',
             STEP_2 = '2',
             STEP_3 = '3';
-        console.log('currentUser', currentUser);
         if (newStep) {
           if (step !== newStep) this.$router.replace(`/registration/${newStep}`);
         } else if (!services.password) {
@@ -255,7 +253,7 @@
               displayError(err);
             }
           } else {
-            this.redirectToStep(2);
+            this.redirectToStep();
           }
         });
       }
