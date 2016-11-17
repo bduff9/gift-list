@@ -1,7 +1,10 @@
 <template>
   <div class="window columns">
     <div class="login content column is-8 is-offset-2">
-      <div class="columns is-mobile has-text-centered">
+      <div class="columns is-multiline is-mobile has-text-centered">
+        <div class="column is-12">
+          <h2 class="title-font">My Gift List</h2>
+        </div>
         <div class="column">
           <h1 v-text="mode === 'login' ? 'Login' : 'Register'" />
           &nbsp;&nbsp;

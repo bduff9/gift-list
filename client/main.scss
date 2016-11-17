@@ -3,6 +3,7 @@
 
 // Imports here
 @import "{bduff9:bulma}/bulma.scss";
+@import url(http://fonts.googleapis.com/css?family=Great+Vibes); //Title font
 
 // Custom styles here
 html,
@@ -31,6 +32,14 @@ body {
 
   hr {
     background-color: #A9A9A9;
+  }
+
+  h2 {
+    &.title-font {
+      font: 400 100px/0.8 'Great Vibes', Helvetica, sans-serif;
+      color: #747474;
+      text-shadow: 4px 4px 3px rgba(0,0,0,0.1);
+    }
   }
 
 }
